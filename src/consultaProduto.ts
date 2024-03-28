@@ -1,0 +1,23 @@
+import express from "express";
+import connection from "./connection";
+import { Request, Response } from 'express';
+
+const router = express.Router();
+
+router.get('/consultaProduto', async (req: Request, res: Response) => {
+    try {
+        const {codprod} = req.query;
+        
+        const dados = await connection('produto')
+            .select('*')
+            .where({codprod: codprod})
+            
+
+        res.status(200).send(dados)    
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Erro no servidor.")
+    }
+})
+export default router;

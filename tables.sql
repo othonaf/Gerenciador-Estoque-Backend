@@ -1,0 +1,36 @@
+
+create type perfilTipo as ENUM ('admin', 'normal', 'mestre');
+
+
+CREATE TABLE if NOT exists usuario (
+    cpf NUMERIC NOT null PRIMARY KEY,
+    nome varchar NOT NULL,
+    senha VARCHAR (120) NOT NULL,
+    perfil perfilTipo NOT NULL DEFAULT 'normal',
+    email VARCHAR NOT NULL,
+    telefone NUMERIC (11)
+);
+
+create table if not exists produto (
+    codProd NUMERIC not null default primary key,
+    descricao text not null unique,
+    valorDeCompra DECIMAL not NULL,
+    valorDeVenda DECIMAL NOT NULL,
+    created_at timestamp with time zone not null default now(),
+    vencimento timestamp with time zone not null,
+    quantidade NUMERIC NOT NULL
+
+);
+CREATE Table if not exists vendas (
+    id UUID NOT NULL default uuid_generate_v4() primary key,
+    data TIMESTAMP with time zone not null DEFAULT now(),
+    valorTotal decimal NOT null,
+    vendedor NUMERIC REFERENCES usuario (login)
+
+);
+
+CREATE TABLE IF NOT EXISTS venda_produto (
+    venda_id UUID NOT NULL REFERENCES vendas(id),
+    produto_id NUMERIC NOT NULL REFERENCES produto(codProd),
+    PRIMARY KEY (venda_id, produto_id)
+);

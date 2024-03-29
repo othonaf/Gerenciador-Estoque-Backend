@@ -4,11 +4,11 @@ import { Request, Response } from "express";
 
 const router = express.Router();
 
-let listaDeCompras = [];
-let valorTotal = 0;
-
 router.post('/adicionaProduto', async (req: Request, res: Response) => {
     try {
+        let listaDeCompras = [];
+        let valorTotal = 0;
+
         const { codprod } = req.body;
 
         const item = await connection('produto')

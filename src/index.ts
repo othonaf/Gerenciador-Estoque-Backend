@@ -3,7 +3,8 @@ import registraProduto from "./registraProduto";
 import consultaProduto from "./consultaProduto";
 import criarUsuario from "./criarUsuario";
 import login from "./login";
-import registraVenda from "./adicionaProduto";
+import adicionaProduto from "./adicionaProduto";
+import registraVenda from "./registraVenda";
 
 // Rota para o Enpoint de Login:
 app.use('/api', login)
@@ -17,8 +18,11 @@ app.use('/api', registraProduto)
 //Rota para o Endpoint de Consultar um Produto:
 app.use('/api', consultaProduto)
 
-//Rota para o Endpoint de Registrar uma venda:
-app.use('/api', registraVenda)
+//Rota para o Endpoint de ADICIONAR um PRODUTO:
+app.use('/api', adicionaProduto)
+
+//Rota para o Endpoint de REGISTRAR UMA VENDA:
+app.use('/api', registraVenda);
 
 
 

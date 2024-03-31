@@ -25,12 +25,14 @@ CREATE Table if not exists vendas (
     id UUID NOT NULL default uuid_generate_v4() primary key,
     data TIMESTAMP with time zone not null DEFAULT now(),
     valorTotal decimal NOT null,
-    vendedor NUMERIC REFERENCES usuario (login)
+    vendedor NUMERIC REFERENCES usuario (login),
+    
 
 );
 
 CREATE TABLE IF NOT EXISTS venda_produto (
     venda_id UUID NOT NULL REFERENCES vendas(id),
     produto_id NUMERIC NOT NULL REFERENCES produto(codProd),
-    PRIMARY KEY (venda_id, produto_id)
+    PRIMARY KEY (venda_id, produto_id),
+    total_lucro numeric NOT NULL
 );

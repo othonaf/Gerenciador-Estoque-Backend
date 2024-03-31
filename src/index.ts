@@ -5,6 +5,9 @@ import criarUsuario from "./criarUsuario";
 import login from "./login";
 import adicionaProduto from "./adicionaProduto";
 import registraVenda from "./registraVenda";
+import editaProduto from "./editaProduto";
+import consultaVenda from "./consultaVenda";
+import dashboard from "./dashboard"
 
 // Rota para o Enpoint de Login:
 app.use('/api', login)
@@ -23,6 +26,15 @@ app.use('/api', adicionaProduto)
 
 //Rota para o Endpoint de REGISTRAR UMA VENDA:
 app.use('/api', registraVenda);
+
+//Rota para o Endpoint de Editar Produto:
+app.use('/api', editaProduto);
+
+//Rota para o Endpoint Consultar uma Venda:
+app.use('/api', consultaVenda);
+
+//Rota para o Endpoint Consultar uma Venda:
+app.use('/api', dashboard);
 
 
 

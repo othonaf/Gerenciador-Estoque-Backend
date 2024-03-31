@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.45",
     "pg": "^8.11.3"
   }
 }

@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 const router = express.Router();
 
 router.post('/editaProduto', async (req: Request, res: Response) => {
-    const { codprod, descricao, valordecompra, valordevenda, vencimento, quantidade } = req.body;
+    const { codprod, descricao, valordecompra, valordevenda, vencimento, quantidade, setor } = req.body;
     try {
         const dados = await connection('produto').where({ codprod: codprod });
 
@@ -15,7 +15,7 @@ router.post('/editaProduto', async (req: Request, res: Response) => {
         }
         await connection('produto')
             .where({codprod: codprod})
-            .update({ descricao, valordecompra, valordevenda, vencimento, quantidade })
+            .update({ descricao, valordecompra, valordevenda, vencimento, quantidade, setor })
 
         res.status(200).send("Produto atualizado com sucesso!")
 

@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 const router = express.Router();
 
 router.post('/registraProduto', async (req: Request, res: Response) => {
-    const { codprod, descricao, valordecompra, valordevenda, vencimento, quantidade } = req.body;
+    const { codprod, descricao, valordecompra, valordevenda, vencimento, quantidade, setor } = req.body;
     try {
         const dados = await connection('produto').where({ codprod: codprod });
 
@@ -14,7 +14,7 @@ router.post('/registraProduto', async (req: Request, res: Response) => {
             res.status(401).send("Produto já cadastrado.")
         }
         await connection('produto')
-            .insert({ codprod, descricao, valordecompra, valordevenda, vencimento, quantidade })
+            .insert({ codprod, descricao, valordecompra, valordevenda, vencimento, quantidade, setor })
 
         res.status(200).send("Registro criado com sucesso!")
 

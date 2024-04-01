@@ -7,7 +7,8 @@ import adicionaProduto from "./adicionaProduto";
 import registraVenda from "./registraVenda";
 import editaProduto from "./editaProduto";
 import consultaVenda from "./consultaVenda";
-import dashboard from "./dashboard"
+import dashboard from "./dashboard";
+import alteraPerfilUsuario from "./alterarPerfilUsuario";
 
 // Rota para o Enpoint de Login:
 app.use('/api', login)
@@ -36,5 +37,7 @@ app.use('/api', consultaVenda);
 //Rota para o Endpoint Consultar uma Venda:
 app.use('/api', dashboard);
 
+//Rota para o Endpoint alterar perfil de usuário:
+app.use('/api', alteraPerfilUsuario);
 
 

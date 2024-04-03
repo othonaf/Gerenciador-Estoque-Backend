@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 
 const router = express.Router();
 
-router.post('/editaProduto', async (req: Request, res: Response) => {
+router.put('/editaProduto', async (req: Request, res: Response) => {
     const { codprod, descricao, valordecompra, valordevenda, vencimento, quantidade, setor } = req.body;
     try {
         const dados = await connection('produto').where({ codprod: codprod });

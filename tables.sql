@@ -1,4 +1,5 @@
--- Active: 1712061061117@@dpg-co5k1ve3e1ms73b7jn8g-a.ohio-postgres.render.com@5432@gerenciador_de_estoque
+
+CREATE DATABASE gerenciadorDeEstoque;
 
 create type perfilTipo as ENUM ('admin', 'normal', 'mestre');
 
@@ -44,3 +45,5 @@ SELECT * FROM usuario;
 SELECT * FROM vendas;
 
 SELECT * FROM venda_produto;
+
+SELECT * FROM produto;

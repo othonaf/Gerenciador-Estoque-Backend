@@ -36,9 +36,9 @@ router.post('/criarUsuario', async (req: Request, res: Response) => {
 
         res.status(200).send("Usuário criado com sucesso.")
 
-    } catch (error) {
+    } catch (error:any) {
         console.log(error)
-        res.status(500).send("Erro no servidor.")
+        res.status(500).send(`Erro no servidor: ${error.message}`)
     }
 })
 export default router;

@@ -3,10 +3,14 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const checaPerfil = (profileRequired: string) => (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization as string; 
+  const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new Error('JWT_SECRET is not defined');
+    };
 
   let decoded: JwtPayload | string;
   try {
-    decoded = jwt.verify(token, 'f1#z8.sqt');
+    decoded = jwt.verify(token, secret);
   } catch (error) {
     return res.status(401).json({ message: 'Token inválido' });
   }

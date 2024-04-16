@@ -9,6 +9,8 @@ import editaProduto from "./editaProduto";
 import consultaVenda from "./consultaVenda";
 import dashboard from "./dashboard";
 import alteraPerfilUsuario from "./alterarPerfilUsuario";
+import emailResetaSenha from "./emailResetaSenha";
+import resetPassword from "./resetPassword";
 
 // Rota para o Enpoint de Login:
 app.use('/api', login)
@@ -40,4 +42,9 @@ app.use('/api', dashboard);
 //Rota para o Endpoint alterar perfil de usuário:
 app.use('/api', alteraPerfilUsuario);
 
+//Rota para o Endpoint de enviar E-mail para Reset de senha:
+app.use('/api', emailResetaSenha);
+
+//Rota para o Endpoint alterar a senha:
+app.use('/api', resetPassword);
 

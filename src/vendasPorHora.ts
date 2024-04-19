@@ -7,7 +7,8 @@ import checaPerfil from "./checaPerfil";
 
 const router = express.Router();
 
-router.get('/dashboard', checaPerfil('admin'), async (req: Request, res: Response) => {
+router.get('/vendasPorHora', checaPerfil('admin'), async (req: Request, res: Response) => {
+
     try {
         let { dataInicio, dataFim } = req.query
 
@@ -24,13 +25,20 @@ router.get('/dashboard', checaPerfil('admin'), async (req: Request, res: Respons
         let totalLucro = 0;
         const quantidadeProdutos = vendas.length;
 
+        const vendasPorTempo = await connection('vendas')
+            .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
+            .where('data', '>=', dataInicio)
+            .andWhere('data', '<=', dataFim)
+            .groupBy(connection.raw('extract(hour from data)')) // Agrupa as vendas por hora
+            .select(connection.raw('extract(hour from data) as hora'), connection.raw('count(*) as quantidade'));
+
         for (const venda of vendas) {
             if (venda.total_lucro !== null) {
                 totalLucro += parseFloat(venda.total_lucro);
             }
         }
 
-        res.status(201).json({ totalLucro, quantidadeProdutos, vendas })
+        res.status(201).json({ totalLucro, quantidadeProdutos, vendasPorTempo })
 
     } catch (error) {
         console.log(error)

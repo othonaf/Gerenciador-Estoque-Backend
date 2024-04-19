@@ -7,10 +7,12 @@ import adicionaProduto from "./adicionaProduto";
 import registraVenda from "./registraVenda";
 import editaProduto from "./editaProduto";
 import consultaVenda from "./consultaVenda";
-import dashboard from "./dashboard";
+import vendasPorHora from "./vendasPorHora";
 import alteraPerfilUsuario from "./alterarPerfilUsuario";
 import emailResetaSenha from "./emailResetaSenha";
 import resetPassword from "./resetPassword";
+import vendasPorDiasNaSemana from "./vendasPorDiasNaSemana";
+import vendasPorSemana from "./vendasPorSemana";
 
 // Rota para o Enpoint de Login:
 app.use('/api', login)
@@ -36,8 +38,14 @@ app.use('/api', editaProduto);
 //Rota para o Endpoint Consultar uma Venda:
 app.use('/api', consultaVenda);
 
-//Rota para o Endpoint Consultar uma Venda:
-app.use('/api', dashboard);
+//Rota para o Endpoint Consultar Vendas Por Hora:
+app.use('/api', vendasPorHora);
+
+//Rota para o Endpoint Consultar Vendas Por Dias:
+app.use('/api', vendasPorDiasNaSemana);
+
+//Rota para o Endpoint Consultar Vendas Por Semana:
+app.use('/api', vendasPorSemana);
 
 //Rota para o Endpoint alterar perfil de usuário:
 app.use('/api', alteraPerfilUsuario);

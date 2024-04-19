@@ -12,19 +12,19 @@ const checaPerfil = (profileRequired: string) => (req: Request, res: Response, n
   try {
     decoded = jwt.verify(token, secret);
   } catch (error) {
-    return res.status(401).json({ message: 'Token inválido' });
+    return res.status(401).send('Token inválido, erro no Token.');
   }
 
   if (typeof decoded === 'string') {
     // Se 'decoded' for uma string, algo deu errado
-    return res.status(401).json({ message: 'Token inválido' });
+    return res.status(401).send('Token inválido, Erro de string' );
   }
 
   // 'Decoded' é do tipo JwtPayload
   if (decoded.perfil === profileRequired) {
     next();
   } else {
-    res.status(403).json({ message: 'Acesso proibido' });
+    res.status(403).send('Acesso proibido');
   }
 };
 

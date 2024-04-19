@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/dashboard', checaPerfil('admin'), async (req: Request, res: Response) => {
     try {
-        let { dataInicio, dataFim } = req.body
+        let { dataInicio, dataFim } = req.query
 
         // Converte as datas para o fuso horário do banco de dados
         dataInicio = moment.tz(dataInicio, 'America/Sao_Paulo').format();

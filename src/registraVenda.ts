@@ -1,15 +1,20 @@
 import express from "express";
 import { Request, Response } from "express";
 import connection from "./connection";
+import validaToken from './checaTokenUser';
 
 const router = express.Router();
 
-router.post('/registraVenda', async (req: Request, res: Response) => {
+router.post('/registraVenda', validaToken, async (req: Request, res: Response) => {
     try {
-        const { valorTotal, usuario, listaDeCompras } = req.body
+        const { valorTotal, listaDeCompras } = req.body;
+        const {usuario} = req;
+        const vendedor = usuario.cpf;
+        console.log(usuario)
+        
         //Código para registrar a venda:
         const venda = await connection('vendas')
-            .insert({ valortotal: valorTotal, vendedor: usuario }, 'id');
+            .insert({ valortotal: valorTotal, vendedor: vendedor }, 'id');
 
         const vendaId = venda[0].id;
         for (let produto of listaDeCompras) {

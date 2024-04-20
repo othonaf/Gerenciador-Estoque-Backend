@@ -29,7 +29,7 @@ router.get('/vendasPorSemana', checaPerfil('admin'), async (req: Request, res: R
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
             .where('data', '>=', dataInicio)
             .andWhere('data', '<=', dataFim)
-            .groupBy(connection.raw('extract(week from data)')) // Agrupa as vendas por semana do ano
+            .groupBy(connection.raw('extract(week from data)')) // Agrupa as vendas por semana do ano (MÊS)
             .select(connection.raw('extract(week from data) as semana'), connection.raw('count(*) as quantidade'));
 
 

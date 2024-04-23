@@ -45,6 +45,13 @@ router.get('/vendasPorSemana', checaPerfil('admin'), async (req: Request, res: R
                 dia: diasDaSemana[item.dia], // Converte o número do dia para o nome do dia
             })));
 
+            const vendasPorVendedor = await connection('vendas')
+            .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
+            .where(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '>=', dataInicio)
+            .andWhere(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '<=', dataFim)
+            .groupBy('vendedor') // Agrupa as vendas por vendedor
+            .select('vendedor', connection.raw('count(*) as quantidade'));
+
 
         for (const venda of vendas) {
             if (venda.total_lucro !== null) {
@@ -54,7 +61,7 @@ router.get('/vendasPorSemana', checaPerfil('admin'), async (req: Request, res: R
 
 
 
-        res.status(201).json({ vendasPorTempo, totalLucro, quantidadeProdutos })
+        res.status(201).json({ vendasPorTempo, totalLucro, quantidadeProdutos, vendasPorVendedor })
 
     } catch (error) {
         console.log(error)

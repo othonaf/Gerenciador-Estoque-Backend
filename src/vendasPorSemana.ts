@@ -8,7 +8,10 @@ import checaPerfil from "./checaPerfil";
 const router = express.Router();
 
 router.get('/vendasPorSemana', checaPerfil('admin'), async (req: Request, res: Response) => {
-
+    interface Item {
+        dia: number;
+        quantidade: number;
+    }
     try {
         let { dataInicio, dataFim } = req.query
 
@@ -25,12 +28,22 @@ router.get('/vendasPorSemana', checaPerfil('admin'), async (req: Request, res: R
         let totalLucro = 0;
         const quantidadeProdutos = vendas.length;
 
+        const diasDaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+
         const vendasPorTempo = await connection('vendas')
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
-            .where('data', '>=', dataInicio)
-            .andWhere('data', '<=', dataFim)
-            .groupBy(connection.raw('extract(week from data)')) // Agrupa as vendas por semana do ano (MÊS)
-            .select(connection.raw('extract(week from data) as semana'), connection.raw('count(*) as quantidade'));
+            .where(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '>=', dataInicio)
+            .andWhere(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '<=', dataFim)
+            .groupBy(connection.raw('extract(dow from data AT TIME ZONE \'America/Sao_Paulo\')')) // Agrupa as vendas por dia da semana
+            .select(
+                connection.raw('extract(dow from data AT TIME ZONE \'America/Sao_Paulo\') as dia'),
+                connection.raw('count(*) as quantidade'),
+                connection.raw('sum(venda_produto.total_lucro) as totalLucro') // Soma o lucro total para cada dia da semana
+            )
+            .then(results => results.map((item: Item) => ({
+                ...item,
+                dia: diasDaSemana[item.dia], // Converte o número do dia para o nome do dia
+            })));
 
 
         for (const venda of vendas) {
@@ -39,7 +52,9 @@ router.get('/vendasPorSemana', checaPerfil('admin'), async (req: Request, res: R
             }
         }
 
-        res.status(201).json({ totalLucro, quantidadeProdutos, vendasPorTempo })
+
+
+        res.status(201).json({ vendasPorTempo, totalLucro, quantidadeProdutos })
 
     } catch (error) {
         console.log(error)

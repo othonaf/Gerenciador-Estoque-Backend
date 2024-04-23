@@ -7,7 +7,7 @@ import checaPerfil from "./checaPerfil";
 
 const router = express.Router();
 
-router.get('/vendasPorHora', checaPerfil('admin'), async (req: Request, res: Response) => {
+router.get('/vendasPorDia', checaPerfil('admin'), async (req: Request, res: Response) => {
 
     try {
         let { dataInicio, dataFim } = req.query

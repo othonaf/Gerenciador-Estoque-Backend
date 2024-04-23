@@ -12,7 +12,7 @@ router.get('/consultaProduto', async (req: Request, res: Response) => {
             .select('*')
             .where({codprod: codprod})
         if (dados.length === 0) {
-            res.status(200).send('Produto não registrado!')
+            res.status(201).send('Produto não Encontrado!')
         }    
         else{res.status(200).send(dados)}
          

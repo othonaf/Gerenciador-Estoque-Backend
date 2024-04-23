@@ -20,11 +20,11 @@ router.get('/vendasPorDia', checaPerfil('admin'), async (req: Request, res: Resp
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
             .where('data', '>=', dataInicio)
             .andWhere('data', '<=', dataFim)
-            .select('*');
+            // .select('*')
+            .sum('qtde_total_prod as quantidadeProdutos');
         
-            console.log(vendas)
         let totalLucro = 0;
-        const quantidadeProdutos = vendas.length;
+        const quantidadeProdutos = vendas[0].quantidadeProdutos;
 
         const vendasPorTempo = await connection('vendas')
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
@@ -36,6 +36,7 @@ router.get('/vendasPorDia', checaPerfil('admin'), async (req: Request, res: Resp
                 connection.raw('count(*) as quantidade'),
                 connection.raw('sum(venda_produto.total_lucro) as totalLucro') // Soma o lucro total para cada hora
             );
+
         const vendasPorVendedor = await connection('vendas')
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
             .join('usuario', 'vendas.vendedor', '=', 'usuario.cpf') // Junta com a tabela 'usuario'

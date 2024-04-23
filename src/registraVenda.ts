@@ -7,14 +7,14 @@ const router = express.Router();
 
 router.post('/registraVenda', validaToken, async (req: Request, res: Response) => {
     try {
-        const { valorTotal, listaDeCompras } = req.body;
+        const { valorTotal, listaDeCompras, qtde_total_prod } = req.body;
         const {usuario} = req;
         const vendedor = usuario.cpf;
         console.log(usuario)
         
         //Código para registrar a venda:
         const venda = await connection('vendas')
-            .insert({ valortotal: valorTotal, vendedor: vendedor }, 'id');
+            .insert({ valortotal: valorTotal, vendedor: vendedor, qtde_total_prod: qtde_total_prod }, 'id');
 
         const vendaId = venda[0].id;
         for (let produto of listaDeCompras) {

@@ -21,7 +21,8 @@ router.get('/vendasPorDia', checaPerfil('admin'), async (req: Request, res: Resp
             .where('data', '>=', dataInicio)
             .andWhere('data', '<=', dataFim)
             .select('*');
-
+        
+            console.log(vendas)
         let totalLucro = 0;
         const quantidadeProdutos = vendas.length;
 

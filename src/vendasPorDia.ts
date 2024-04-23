@@ -37,10 +37,11 @@ router.get('/vendasPorDia', checaPerfil('admin'), async (req: Request, res: Resp
             );
         const vendasPorVendedor = await connection('vendas')
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
+            .join('usuario', 'vendas.vendedor', '=', 'usuario.cpf') // Junta com a tabela 'usuario'
             .where(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '>=', dataInicio)
             .andWhere(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '<=', dataFim)
-            .groupBy('vendedor') // Agrupa as vendas por vendedor
-            .select('vendedor', connection.raw('count(*) as quantidade'));
+            .groupBy('usuario.nome') // Agrupa as vendas por nome do vendedor
+            .select('usuario.nome', connection.raw('count(*) as quantidade')); 
 
         for (const venda of vendas) {
             if (venda.total_lucro !== null) {

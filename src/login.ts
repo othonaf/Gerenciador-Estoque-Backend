@@ -31,7 +31,7 @@ router.post('/login', async (req: Request, res: Response) => {
         return res.status(401).json({ message: 'Senha incorreta' });
       }
 
-      const token = jwt.sign({ cpf: user.cpf, perfil: user.perfil }, secret, {
+      const token = jwt.sign({ nome: user.nome, cpf: user.cpf, perfil: user.perfil }, secret, {
         expiresIn: '8h', algorithm: 'HS256'
       });
 

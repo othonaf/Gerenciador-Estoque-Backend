@@ -11,9 +11,11 @@ router.get('/consultaProduto', async (req: Request, res: Response) => {
         const dados = await connection('produto')
             .select('*')
             .where({codprod: codprod})
-            
-
-        res.status(200).send(dados)    
+        if (dados.length === 0) {
+            res.status(200).send('Produto não registrado!')
+        }    
+        else{res.status(200).send(dados)}
+         
 
     } catch (error) {
         console.log(error)

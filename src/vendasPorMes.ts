@@ -27,10 +27,15 @@ router.get('/vendasPorMes', checaPerfil('admin'), async (req: Request, res: Resp
 
         const vendasPorTempo = await connection('vendas')
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
-            .where('data', '>=', dataInicio)
-            .andWhere('data', '<=', dataFim)
-            .groupBy(connection.raw('extract(week from data)')) // Agrupa as vendas por semana do ano (MÊS)
-            .select(connection.raw('extract(week from data) as semana'), connection.raw('count(*) as quantidade'));
+            .where(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '>=', dataInicio)
+            .andWhere(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '<=', dataFim)
+            .groupBy(connection.raw('extract(week from data AT TIME ZONE \'America/Sao_Paulo\')'), 'vendas.data') // Inclui 'vendas.data' na cláusula GROUP BY
+            .select(
+                connection.raw('extract(week from data AT TIME ZONE \'America/Sao_Paulo\') as semana'),
+                connection.raw('count(*) as quantidade'),
+                connection.raw('sum(venda_produto.total_lucro) as totalLucro') // Soma o lucro total para cada semana do mês
+            )
+
 
         const vendasPorVendedor = await connection('vendas')
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
@@ -50,7 +55,7 @@ router.get('/vendasPorMes', checaPerfil('admin'), async (req: Request, res: Resp
 
     } catch (error) {
         console.log(error)
-        res.status(500).send("Erro no servidor.")
+        res.status(500).json({ "Erro no servidor.": error })
     }
 });
 export default router;

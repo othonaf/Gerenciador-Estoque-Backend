@@ -16,26 +16,45 @@ router.get('/vendasPorDia', checaPerfil('admin'), async (req: Request, res: Resp
         dataInicio = moment.tz(dataInicio, 'America/Sao_Paulo').format();
         dataFim = moment.tz(dataFim, 'America/Sao_Paulo').format();
 
+        //Query para buscar dados para cálculo do LUCRO TOTAL: 
         const vendas = await connection('vendas')
+            .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
+            .where('data', '>=', `'${dataInicio}'`)
+            .andWhere('data', '<=', `'${dataFim}'`)
+            .select('*')
+
+
+        //Query para buscar dados para A QUANTIDADE DE PRODUTOS VENDIDOS: 
+        const quantidadeVendas = await connection('vendas')
+            .where('data', '>=', `'${dataInicio}'`)
+            .andWhere('data', '<=', `'${dataFim}'`)
+            .sum('qtde_total_prod as quantidadeProdutos');
+
+        const quantidadeProdutos = quantidadeVendas[0].quantidadeProdutos;
+
+        let totalLucro = 0;
+        // Query para calcular os lucros por venda:
+        const lucroPorVenda = await connection<Record<string, any>>('vendas')
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
             .where('data', '>=', dataInicio)
             .andWhere('data', '<=', dataFim)
-            // .select('*')
-            .sum('qtde_total_prod as quantidadeProdutos');
-        
-        let totalLucro = 0;
-        const quantidadeProdutos = vendas[0].quantidadeProdutos;
-
-        const vendasPorTempo = await connection('vendas')
-            .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
-            .where(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '>=', dataInicio)
-            .andWhere(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '<=', dataFim)
-            .groupBy(connection.raw('extract(hour from data AT TIME ZONE \'America/Sao_Paulo\')')) // Agrupa as vendas por hora
+            .groupBy(connection.raw('extract(hour from data)'))
             .select(
-                connection.raw('extract(hour from data AT TIME ZONE \'America/Sao_Paulo\') as hora'),
-                connection.raw('count(*) as quantidade'),
-                connection.raw('sum(venda_produto.total_lucro) as totalLucro') // Soma o lucro total para cada hora
+                connection.raw('extract(hour from data) as hora'),
+                connection.raw('sum(venda_produto.total_lucro) as totalLucro')
             );
+            
+        // Query para calcular as vendas por tempo:
+        const vendasPorTempo = await connection<Record<string, any>>('vendas')
+            .where('data', '>=', dataInicio)
+            .andWhere('data', '<=', dataFim)
+            .groupBy(connection.raw('extract(hour from data)'))
+            .select(
+                connection.raw('extract(hour from data) as hora'),
+                connection.raw('count(*) as quantidade'),
+            );
+
+        
 
         const vendasPorVendedor = await connection('vendas')
             .join('venda_produto', 'vendas.id', '=', 'venda_produto.venda_id')
@@ -43,7 +62,7 @@ router.get('/vendasPorDia', checaPerfil('admin'), async (req: Request, res: Resp
             .where(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '>=', dataInicio)
             .andWhere(connection.raw('data AT TIME ZONE \'America/Sao_Paulo\''), '<=', dataFim)
             .groupBy('usuario.nome') // Agrupa as vendas por nome do vendedor
-            .select('usuario.nome', connection.raw('count(*) as quantidade')); 
+            .select('usuario.nome', connection.raw('count(*) as quantidade'));
 
         for (const venda of vendas) {
             if (venda.total_lucro !== null) {
@@ -51,7 +70,7 @@ router.get('/vendasPorDia', checaPerfil('admin'), async (req: Request, res: Resp
             }
         }
 
-        res.status(201).json({ totalLucro, quantidadeProdutos, vendasPorTempo, vendasPorVendedor })
+        res.status(201).json({ totalLucro, quantidadeProdutos, vendasPorTempo, vendasPorVendedor, lucroPorVenda })
 
     } catch (error) {
         console.log(error)

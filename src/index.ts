@@ -13,6 +13,7 @@ import resetPassword from "./resetPassword";
 import vendasPorDia from "./vendasPorDia";
 import vendasPorSemana from "./vendasPorSemana";
 import vendasPorMes from "./vendasPorMes";
+import deletaProduto from "./deletaProduto";
 
 // Rota para o Enpoint de Login:
 app.use('/api', login)
@@ -55,4 +56,8 @@ app.use('/api', emailResetaSenha);
 
 //Rota para o Endpoint alterar a senha:
 app.use('/api', resetPassword);
+
+//Rota para o Endpoint de Deletar um Produto:
+app.use('/api', deletaProduto);
+
 

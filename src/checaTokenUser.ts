@@ -37,7 +37,6 @@ const validaToken = (req: Request, res: Response, next: NextFunction) => {
     try {
         const usuario = jwt.verify(token, secret);
 
-        // Você pode adicionar o usuário ao objeto de requisição para que você possa acessá-lo em rotas protegidas
         req.usuario = usuario;
 
         return next(); // Chama a próxima rota

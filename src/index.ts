@@ -14,6 +14,7 @@ import vendasPorDia from "./vendasPorDia";
 import vendasPorSemana from "./vendasPorSemana";
 import vendasPorMes from "./vendasPorMes";
 import deletaProduto from "./deletaProduto";
+import testaToken from "./testaToken";
 
 // Rota para o Enpoint de Login:
 app.use('/api', login)
@@ -59,5 +60,8 @@ app.use('/api', resetPassword);
 
 //Rota para o Endpoint de Deletar um Produto:
 app.use('/api', deletaProduto);
+
+//Rota para o Endpoint de Testar o Token:
+app.use('/api', testaToken)
 
 
